@@ -71,6 +71,7 @@ export class BoardComponent implements OnInit {
           this.executeAfterCrud()
         },
         error => {
+          console.log('error', error);
           alert('Não foi possivel editar a task')
         }
       )
