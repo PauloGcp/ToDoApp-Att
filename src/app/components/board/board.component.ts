@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Todo } from 'src/app/model/todo';
 import { toDoService } from 'src/app/service/to-do.service';
+import {ToDoFireStoreService} from 'src/app/service/to-do-fire-store.service'
 
 @Component({
   selector: 'app-board',
@@ -15,7 +16,7 @@ export class BoardComponent implements OnInit {
   toDoObject: Todo = new Todo()
   toDoArray: Todo[] = []
 
-  constructor(private service: toDoService) { }
+  constructor(private service: ToDoFireStoreService) { }
 
   ngOnInit(): void {
     this.getAllToDos();
@@ -79,7 +80,7 @@ export class BoardComponent implements OnInit {
   }
 
   deleteToDo(toDo: Todo) {
-    this.service.deleteTodo(toDo).subscribe(
+    this.service.deleteTodo(toDo.id+"").subscribe(
       res => {
         this.executeAfterCrud()
       },
