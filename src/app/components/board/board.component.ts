@@ -47,6 +47,7 @@ export class BoardComponent implements OnInit {
           this.currentTaskDescription = ''
         },
         error => {
+          console.log('error', error);
           alert('Não foi possivel criar a task.')
         }
       )
