@@ -40,7 +40,7 @@ export class ToDoFireStoreService {
   editTodo(todo: Todo): Observable<void> {
     // removendo id pois não vamos guardar nos dados do documento, mas sim usar apenas como id para recuperar o documento
     delete todo.id;
-    return from(this.colecaoTodos.doc(todo.id).update(Object.assign({}, todo)));
+    return from(this.colecaoTodos.doc(todo.id).update({...todo}));
   }
 
 }
