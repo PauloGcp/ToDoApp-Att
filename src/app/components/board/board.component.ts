@@ -68,13 +68,14 @@ export class BoardComponent implements OnInit {
       this.toDoObject.description = this.currentTaskDescriptionToEdit
       this.service.editTodo(this.toDoObject).subscribe(
         res => {
-          this.executeAfterCrud()
+          res
         },
         error => {
           console.log('error', error);
           alert('Não foi possivel editar a task')
         }
       )
+      this.executeAfterCrud()
     }
     this.currentTaskDescriptionToEdit.trim().length > 0 
       ? finalStepToEdit()

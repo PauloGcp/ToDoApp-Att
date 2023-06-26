@@ -38,9 +38,13 @@ export class ToDoFireStoreService {
   }
 
   editTodo(todo: Todo): Observable<void> {
+    /* 
+    trecho de codigo adicionado seguindo o pdf do professor, mas logicamente se o todo.id é deletado, não há como recuperar a propriedade 'id' do todo,
+    então isso estava ocasionando o erro de edição do firestore
+
     // removendo id pois não vamos guardar nos dados do documento, mas sim usar apenas como id para recuperar o documento
-    delete todo.id;
-    return from(this.colecaoTodos.doc(todo.id).update({...todo}));
+    delete todo.id; */
+    return from(this.colecaoTodos.doc(""+todo.id).update(Object.assign({}, todo)));
   }
 
 }
