@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Todo } from 'src/app/model/todo';
 import { toDoService } from 'src/app/service/to-do.service';
 import {ToDoFireStoreService} from 'src/app/service/to-do-fire-store.service'
+import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-board',
@@ -16,7 +17,7 @@ export class BoardComponent implements OnInit {
   toDoObject: Todo = new Todo()
   toDoArray: Todo[] = []
 
-  constructor(private service: ToDoFireStoreService) { }
+  constructor(private service: toDoService, private snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
     this.getAllToDos();
@@ -32,23 +33,40 @@ export class BoardComponent implements OnInit {
   }
   // por não conseguir fazer o tratamento através do try/catch, fiz através do segundo parametro do subscribe (manterei o try/catch no codigo para tentar melhorar a partir desse ponto)
   getAllToDos() {
+    const snackConfig = new MatSnackBarConfig()
     this.service.getAllTodos().subscribe(
-      res => { this.toDoArray = res },
-      error => alert('Não foi possivel carregar as tasks.')
+      res => { 
+        this.toDoArray = res
+      },
+      error => {
+        snackConfig.politeness = 'assertive'
+        snackConfig.duration = 2500
+        snackConfig.panelClass = ['warning']
+        this.snackBar.open('Não foi possível resgatar as tasks!', 'x', snackConfig)
+      }
     )
 
   }
   createToDo() {
     const finalStepToCreate = () => {
+      const snackConfig = new MatSnackBarConfig()
       this.toDoObject.description = this.currentTaskDescription
       this.service.createTodo(this.toDoObject).subscribe(
         res => {
+          snackConfig.politeness = 'assertive'
+          snackConfig.duration = 2500
+          snackConfig.panelClass = ['success']
+          this.snackBar.open('ToDo criado com sucesso!', 'x', snackConfig)
           this.executeAfterCrud()
           this.currentTaskDescription = ''
         },
         error => {
+          snackConfig.politeness = 'assertive'
+          snackConfig.duration = 2500
+          snackConfig.panelClass = ['error']
+          this.snackBar.open('Não foi possível criar o ToDo!', 'x', snackConfig)
           console.log('error', error);
-          alert('Não foi possivel criar a task.')
+          //alert('Não foi possivel criar a task.')
         }
       )
     }
@@ -64,15 +82,24 @@ export class BoardComponent implements OnInit {
   }
 
   editToDo() {
+    const snackConfig = new MatSnackBarConfig()
     const finalStepToEdit = () => {
       this.toDoObject.description = this.currentTaskDescriptionToEdit
       this.service.editTodo(this.toDoObject).subscribe(
         res => {
+          snackConfig.politeness = 'assertive'
+          snackConfig.duration = 2500
+          snackConfig.panelClass = ['success']
+          this.snackBar.open('ToDo editado com sucesso!', 'x', snackConfig)
           res
         },
         error => {
+          snackConfig.politeness = 'assertive'
+          snackConfig.duration = 2500
+          snackConfig.panelClass = ['error']
+          this.snackBar.open('Não foi possível editar o ToDo!', 'x', snackConfig)
           console.log('error', error);
-          alert('Não foi possivel editar a task')
+          //alert('Não foi possivel editar a task')
         }
       )
       this.executeAfterCrud()
@@ -83,11 +110,20 @@ export class BoardComponent implements OnInit {
   }
 
   deleteToDo(toDo: Todo) {
-    this.service.deleteTodo(toDo.id+"").subscribe(
+    const snackConfig = new MatSnackBarConfig()
+    //para o firebase passamos diretamente o id em forma de string 
+    this.service.deleteTodo(toDo).subscribe(
       res => {
+        snackConfig.politeness = 'assertive'
+        snackConfig.duration = 2500
+        snackConfig.panelClass = ['success']
+        this.snackBar.open('ToDo deletado com sucesso!', 'x', snackConfig)
         this.executeAfterCrud()
       },
       error => {
+        snackConfig.politeness = 'assertive'
+        snackConfig.duration = 2500
+        snackConfig.panelClass = ['error']
         alert('Não foi possivel deletar a task')
       }
     )

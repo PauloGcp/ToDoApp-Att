@@ -8,14 +8,20 @@ import { Observable } from 'rxjs';
 })
 export class toDoService {
   
-  serviceURL: string = "http://localhost:3000/tasks"
+  //spring 
+  serviceURL: string = "http://localhost:8080/tasks"
+
+  //json server
+  // serviceURL: string = "http://localhost:3000/tasks"
 
   constructor(private http: HttpClient) {
   }
   
   //Create
   createTodo(todo: Todo) : Observable<Todo> {
-    return this.http.post<Todo>(this.serviceURL, todo)
+    //por algum motivo so consigo realizar o cadastro a partir do put
+    //return this.http.post<Todo>(this.serviceURL, todo)
+    return this.http.put<Todo>(this.serviceURL, todo)
   }
   //Read
   getAllTodos() : Observable<Todo[]> {
